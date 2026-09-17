@@ -1,0 +1,100 @@
+// ByteBell by AkihiroLabs — EN / JA / MY text
+import { state } from "./storage.js";
+
+export const I18N = {
+  en: {
+    days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    daysShort: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    now: "Now", next: "Next", until: "until {time}", startsIn: "starts in {dur}", on: "{day} at {time}", tomorrow: "Tomorrow",
+    free: "Nothing on right now", freeSub: "Enjoy the break.", noNext: "Nothing else this week",
+    today: "Today", week: "Week", add: "Add", addFirst: "Add your first block",
+    newTitle: "New block", editTitle: "Edit block",
+    name: "Name", namePh: "e.g. School, Work", place: "Place (optional)", placePh: "e.g. Cafe Hana",
+    repeats: "Repeats on", weekdays: "Mon–Fri", everyday: "Every day",
+    starts: "Starts", ends: "Ends", overnight: "Ends the next day",
+    color: "Color", remind: "Remind me", noRemind: "No reminder", atStart: "When it starts", before: "{n} min before",
+    save: "Save block", del: "Delete", cancel: "Cancel",
+    errName: "Add a name.", errDays: "Pick at least one day.", errSame: "Set a start and end time that aren't the same.",
+    confirmDel: "Delete “{name}” from every week?", saved: "Saved", deleted: "Deleted",
+    emptyTitle: "Your week is empty",
+    emptyBody: "Add the things that repeat every week, like school or work. Byte shows what's on now and what's next.",
+    todayEmpty: "Nothing scheduled today.",
+    storageWarn: "This browser isn't saving data. Changes will be lost when you close the page.",
+    footNote: "Saved on this device. Phone notifications arrive in the next update.",
+    demoText: "Demo mode: this is a sample week. Your own schedule is safe.",
+    demoExit: "Exit demo", demoOn: "Demo mode on", demoOff: "Back to your schedule",
+    demo: {
+      school: ["School", "Campus"],
+      work: ["Work", "Cafe Hana"],
+      study: ["Late-night study", "Home"],
+      gym: ["Gym", "Sports center"],
+      groceries: ["Groceries", "Supermarket"]
+    },
+    dur: (h, m) => h ? (m ? `${h} h ${m} min` : `${h} h`) : `${m} min`
+  },
+
+  ja: {
+    days: ["月曜日","火曜日","水曜日","木曜日","金曜日","土曜日","日曜日"],
+    daysShort: ["月","火","水","木","金","土","日"],
+    now: "いま", next: "次", until: "{time}まで", startsIn: "あと{dur}", on: "{day} {time}", tomorrow: "明日",
+    free: "今は予定なし", freeSub: "ひと休みしましょう。", noNext: "今週はこの先の予定なし",
+    today: "今日", week: "週間", add: "追加", addFirst: "最初の予定を追加",
+    newTitle: "予定を追加", editTitle: "予定を編集",
+    name: "名前", namePh: "例：学校、バイト", place: "場所（任意）", placePh: "例：カフェ花",
+    repeats: "くり返す曜日", weekdays: "平日", everyday: "毎日",
+    starts: "開始", ends: "終了", overnight: "翌日に終了",
+    color: "色", remind: "通知", noRemind: "通知なし", atStart: "開始時", before: "{n}分前",
+    save: "保存", del: "削除", cancel: "キャンセル",
+    errName: "名前を入力してください。", errDays: "曜日を1つ以上選んでください。", errSame: "開始と終了は別の時刻にしてください。",
+    confirmDel: "「{name}」を毎週の予定から削除しますか？", saved: "保存しました", deleted: "削除しました",
+    emptyTitle: "まだ予定がありません",
+    emptyBody: "学校やバイトなど、毎週くり返す予定を追加しましょう。Byteが「いま」と「次」を教えてくれます。",
+    todayEmpty: "今日は予定がありません。",
+    storageWarn: "このブラウザでは保存できません。ページを閉じると変更が消えます。",
+    footNote: "この端末に保存されます。スマホ通知は次のアップデートで対応します。",
+    demoText: "デモモード：サンプルの1週間です。あなたの予定はそのまま残っています。",
+    demoExit: "デモを終了", demoOn: "デモモード開始", demoOff: "自分の予定に戻りました",
+    demo: {
+      school: ["学校", "キャンパス"],
+      work: ["バイト", "カフェ花"],
+      study: ["夜の勉強", "自宅"],
+      gym: ["ジム", "スポーツセンター"],
+      groceries: ["買い出し", "スーパー"]
+    },
+    dur: (h, m) => h ? (m ? `${h}時間${m}分` : `${h}時間`) : `${m}分`
+  },
+
+  my: {
+    days: ["တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ","တနင်္ဂနွေ"],
+    daysShort: ["တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ","တနင်္ဂနွေ"],
+    now: "ယခု", next: "နောက်တစ်ခု", until: "{time} အထိ", startsIn: "{dur} အကြာတွင် စမည်", on: "{day} {time}", tomorrow: "မနက်ဖြန်",
+    free: "ယခု အစီအစဉ် မရှိပါ", freeSub: "ခဏ အနားယူပါ။", noNext: "ဒီအပတ်အတွက် နောက်ထပ် အစီအစဉ် မရှိပါ",
+    today: "ယနေ့", week: "အပတ်စဉ်", add: "ထည့်ရန်", addFirst: "ပထမဆုံး အစီအစဉ် ထည့်ရန်",
+    newTitle: "အစီအစဉ်အသစ်", editTitle: "အစီအစဉ် ပြင်ရန်",
+    name: "အမည်", namePh: "ဥပမာ - ကျောင်း၊ အလုပ်", place: "နေရာ (မထည့်လည်းရ)", placePh: "ဥပမာ - Cafe Hana",
+    repeats: "ထပ်ခါလုပ်မည့်နေ့များ", weekdays: "တနင်္လာ–သောကြာ", everyday: "နေ့တိုင်း",
+    starts: "စချိန်", ends: "ပြီးချိန်", overnight: "နောက်နေ့တွင် ပြီးမည်",
+    color: "အရောင်", remind: "သတိပေးရန်", noRemind: "သတိမပေးပါ", atStart: "စချိန်တွင်", before: "{n} မိနစ် အလို",
+    save: "သိမ်းရန်", del: "ဖျက်ရန်", cancel: "မလုပ်တော့ပါ",
+    errName: "အမည် ထည့်ပါ။", errDays: "အနည်းဆုံး တစ်ရက် ရွေးပါ။", errSame: "စချိန်နှင့် ပြီးချိန် မတူရပါ။",
+    confirmDel: "“{name}” ကို အပတ်တိုင်းမှ ဖျက်မလား?", saved: "သိမ်းပြီးပါပြီ", deleted: "ဖျက်ပြီးပါပြီ",
+    emptyTitle: "အစီအစဉ် မရှိသေးပါ",
+    emptyBody: "ကျောင်း၊ အလုပ် စသည့် အပတ်တိုင်း ထပ်ခါလုပ်သော အစီအစဉ်များကို ထည့်ပါ။ ယခုနှင့် နောက်တစ်ခုကို Byte က ပြပေးပါမည်။",
+    todayEmpty: "ယနေ့ အစီအစဉ် မရှိပါ။",
+    storageWarn: "ဤဘရောက်ဇာတွင် သိမ်းဆည်း၍ မရပါ။ စာမျက်နှာပိတ်လျှင် ပြောင်းလဲမှုများ ပျောက်ပါမည်။",
+    footNote: "ဤစက်တွင် သိမ်းဆည်းထားပါသည်။ ဖုန်းအသိပေးချက်များကို နောက်အပ်ဒိတ်တွင် ထည့်ပါမည်။",
+    demoText: "ဒီမိုမုဒ် - နမူနာ အပတ်စဉ် ဖြစ်ပါသည်။ သင့်အစီအစဉ်များ မပျက်ပါ။",
+    demoExit: "ဒီမို ထွက်ရန်", demoOn: "ဒီမိုမုဒ် ဖွင့်ပြီး", demoOff: "သင့်အစီအစဉ်သို့ ပြန်ရောက်ပါပြီ",
+    demo: {
+      school: ["ကျောင်း", "ကျောင်းဝင်း"],
+      work: ["အလုပ်", "Cafe Hana"],
+      study: ["ညဘက် စာကျက်", "အိမ်"],
+      gym: ["အားကစားရုံ", "အားကစားစင်တာ"],
+      groceries: ["ဈေးဝယ်", "စူပါမားကတ်"]
+    },
+    dur: (h, m) => h ? (m ? `${h} နာရီ ${m} မိနစ်` : `${h} နာရီ`) : `${m} မိနစ်`
+  }
+};
+
+export const L = () => I18N[state.lang];
+export const t = (key, vars = {}) => String(L()[key]).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
