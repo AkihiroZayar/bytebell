@@ -52,7 +52,7 @@ function renderBell(now) {
   const cur = occ.filter(o => o.start <= now && now < o.end).sort((a, b) => a.end - b.end)[0];
   const nxt = occ.find(o => o.start > now);
 
-  let html = `<span class="bell-byte${firstBell ? " ring" : ""}" aria-hidden="true">🦝</span>`;
+  let html = `<img src="icon.png" alt="" class="bell-byte${firstBell ? " ring" : ""}" width="38" height="38">`;
   firstBell = false;
 
   if (cur) {
@@ -182,7 +182,7 @@ function renderWeek(now) {
 
 function renderEmpty() {
   return `<div class="empty">
-    <div class="byte" aria-hidden="true">🦝</div>
+    <img src="logo.png" alt="AkihiroLabs" class="byte" width="96" height="96">
     <h2>${t("emptyTitle")}</h2>
     <p>${t("emptyBody")}</p>
     <button type="button" class="btn primary" data-action="add">${t("addFirst")}</button>
