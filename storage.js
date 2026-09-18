@@ -37,6 +37,16 @@ export function load() {
   }
 }
 
+// Remove once-blocks whose week ended before this Mon (called on app load).
+export function pruneExpired(now) {
+  const ws = new Date(now); ws.setHours(0,0,0,0); ws.setDate(ws.getDate()-((ws.getDay()+6)%7));
+  state.blocks = state.blocks.filter(b => {
+    if (!b.repeat || b.repeat !== "once" || !b.weekOf) return true;
+    const bwe = new Date(b.weekOf); bwe.setHours(0,0,0,0); bwe.setDate(bwe.getDate()+7);
+    return bwe > ws;   // keep if their week hasn't ended yet
+  });
+}
+
 export function save() {
   // Demo blocks are never written — only the user's real schedule is saved.
   const blocks = state.demo ? (state.savedBlocks || []) : state.blocks;
