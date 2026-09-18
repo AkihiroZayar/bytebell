@@ -1,86 +1,74 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <meta name="theme-color" content="#1E3A8A" />
-    <meta
-      name="description"
-      content="ByteBell by AkihiroLabs: a weekly timetable that tells you what's now and what's next."
-    />
-    <title>ByteBell by AkihiroLabs</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦝</text></svg>"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+Myanmar:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="app">
-      <header class="top">
-        <div class="brand">
-          <button type="button" class="logo" id="logo" aria-label="Byte">
-            🦝
-          </button>
-          <div>
-            <h1>ByteBell</h1>
-            <span class="by">by AkihiroLabs</span>
-          </div>
-        </div>
-        <div class="lang" role="group" id="lang">
-          <button type="button" data-lang="en">EN</button>
-          <button type="button" data-lang="ja">日本語</button>
-          <button type="button" data-lang="my">မြန်မာ</button>
-        </div>
-      </header>
-
-      <div class="demo-bar" id="demoBar" hidden>
-        <span id="demoText"></span>
-        <button type="button" class="demo-exit" id="exitDemo"></button>
-      </div>
-
-      <p class="warn" id="warn" hidden></p>
-
-      <main>
-        <section class="bell" id="bell" aria-live="polite" hidden></section>
-        <div id="views"></div>
-      </main>
-
-      <footer>
-        <p><strong>🦝 ByteBell</strong> by AkihiroLabs</p>
-        <p id="footNote"></p>
-      </footer>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E3A8A">
+<meta name="description" content="ByteBell by AkihiroLabs: a weekly timetable that tells you what's now and what's next.">
+<title>ByteBell by AkihiroLabs</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦝</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+Myanmar:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <button type="button" class="logo" id="logo" aria-label="Byte">🦝</button>
+      <div><h1>ByteBell</h1><span class="by">by AkihiroLabs</span></div>
     </div>
+    <div class="head-right">
+    <button type="button" class="auth-btn" id="authBtn" hidden></button>
+    <div class="lang" role="group" id="lang">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="ja">日本語</button>
+      <button type="button" data-lang="my">မြန်မာ</button>
+    </div>
+    </div>
+  </header>
 
-    <button class="fab" id="fab" type="button">
-      <span class="plus" aria-hidden="true">+</span><span id="fabLabel"></span>
-    </button>
+  <div class="demo-bar" id="demoBar" hidden>
+    <span id="demoText"></span>
+    <button type="button" class="demo-exit" id="exitDemo"></button>
+  </div>
 
-    <dialog id="sheet" aria-labelledby="sheetTitle">
-      <form class="sheet" id="blockForm" novalidate></form>
-    </dialog>
+  <p class="warn" id="warn" hidden></p>
 
-    <div class="toast" id="toast" role="status" hidden></div>
+  <main>
+    <section class="bell" id="bell" aria-live="polite" hidden></section>
+    <div id="views"></div>
+  </main>
 
-    <!-- ES modules don't load from file:// — show a hint instead of a blank page -->
-    <script>
-      if (location.protocol === "file:") {
-        document.addEventListener("DOMContentLoaded", function () {
-          document.getElementById("views").innerHTML =
-            '<p class="warn">Open ByteBell with a local server (e.g. VS Code Live Server) or GitHub Pages.<br>' +
-            "ローカルサーバー（Live Server など）か GitHub Pages で開いてください。</p>";
-        });
-      }
-    </script>
-    <script type="module" src="app.js"></script>
-  </body>
+  <footer>
+    <p><strong>🦝 ByteBell</strong> by AkihiroLabs</p>
+    <p id="footNote"></p>
+  </footer>
+</div>
+
+<button class="fab" id="fab" type="button"><span class="plus" aria-hidden="true">+</span><span id="fabLabel"></span></button>
+
+<dialog id="authDlg" aria-label="Account">
+  <div class="sheet" id="authBody"></div>
+</dialog>
+
+<dialog id="sheet" aria-labelledby="sheetTitle">
+  <form class="sheet" id="blockForm" novalidate></form>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- ES modules don't load from file:// — show a hint instead of a blank page -->
+<script>
+  if (location.protocol === "file:") {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("views").innerHTML =
+        '<p class="warn">Open ByteBell with a local server (e.g. VS Code Live Server) or GitHub Pages.<br>' +
+        'ローカルサーバー（Live Server など）か GitHub Pages で開いてください。</p>';
+    });
+  }
+</script>
+<script type="module" src="app.js"></script>
+</body>
 </html>
