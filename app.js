@@ -1,5 +1,5 @@
 // ByteBell by AkihiroLabs — entry point
-import { state, load, save } from "./storage.js";
+import { state, load, save, pruneExpired } from "./storage.js";
 import { render, $ } from "./render.js";
 import { initSheet, openSheet } from "./sheet.js";
 import { initDemo, refreshDemo } from "./demo.js";
@@ -7,6 +7,7 @@ import { initAuth, renderAuth } from "./auth.js";
 import { initCloud, saveProfile } from "./cloud.js";
 
 load();
+pruneExpired(new Date());
 
 const refresh = () => { render(); renderAuth(); };
 
