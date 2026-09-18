@@ -177,7 +177,7 @@ function renderWeek(now) {
     return `<div class="col${i === todayIdx ? " today" : ""}">${blocks}${line}</div>`;
   }).join("");
 
-  return `<div class="week">${head}<div class="week-body" style="height:calc(${rows} * var(--hour))">${gutter}${cols}</div></div>`;
+  return `<div class="week-wrap"><div class="week">${head}<div class="week-body" style="height:calc(${rows} * var(--hour))">${gutter}${cols}</div></div></div>`;
 }
 
 function renderEmpty() {
