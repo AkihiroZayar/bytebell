@@ -2,10 +2,15 @@
 import { state, save } from "./storage.js";
 import { L, t } from "./i18n.js";
 import { $, esc, COLORS, ALERTS, toast } from "./render.js";
+import { pushBlock, deleteBlock } from "./cloud.js";
 
 let sheet, form, onChange, editingId = null;
 
-const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+// Always a UUID — Supabase stores block ids as uuid.
+const uid = () => crypto.randomUUID
+  ? crypto.randomUUID()
+  : "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
 
 export function openSheet(id) {
   editingId = id || null;
@@ -80,8 +85,10 @@ function onClick(e) {
   if (act.dataset.action === "delete") {
     const b = state.blocks.find(x => x.id === editingId);
     if (b && confirm(t("confirmDel", { name: b.name }))) {
-      state.blocks = state.blocks.filter(x => x.id !== editingId);
+      const removedId = editingId;
+      state.blocks = state.blocks.filter(x => x.id !== removedId);
       save(); sheet.close(); onChange(); toast(t("deleted"));
+      deleteBlock(removedId);
     }
   }
 }
@@ -100,13 +107,16 @@ function onSubmit(e) {
   if (err) { $("#f-err").textContent = err; return; }
 
   const ts = new Date().toISOString();
+  let block;
   if (editingId) {
-    const b = state.blocks.find(x => x.id === editingId);
-    if (b) Object.assign(b, { name, place, days, start, end, color, alert, updatedAt: ts });
+    block = state.blocks.find(x => x.id === editingId);
+    if (block) Object.assign(block, { name, place, days, start, end, color, alert, updatedAt: ts });
   } else {
-    state.blocks.push({ id: uid(), name, place, days, start, end, color, alert, createdAt: ts, updatedAt: ts });
+    block = { id: uid(), name, place, days, start, end, color, alert, createdAt: ts, updatedAt: ts };
+    state.blocks.push(block);
   }
   save(); sheet.close(); onChange(); toast(t("saved"));
+  if (block) pushBlock(block);
 }
 
 export function initSheet(changeCallback) {
