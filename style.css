@@ -16,19 +16,23 @@ button,input,select{font:inherit;color:inherit}
 .app{max-width:760px;margin:0 auto;padding:14px 16px calc(110px + env(safe-area-inset-bottom))}
 
 /* ---------- Header ---------- */
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;min-height:50px}
+/* Keep header metrics identical in every language (Burmese uses a taller line-height elsewhere). */
+.top,.top *,:lang(my) .top,:lang(my) .top *{line-height:1.25}
+.brand h1,:lang(my) .brand h1{line-height:1.1}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
 .brand h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.01em;color:var(--navy);line-height:1.1}
 .brand .by{display:block;font-size:12px;color:var(--ink-2);font-weight:500}
 .logo{border:0;background:none;padding:0;font-size:30px;line-height:1;cursor:pointer;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .logo.tap{animation:tap .25s ease-out}
 @keyframes tap{50%{transform:scale(1.18)}}
-.head-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.auth-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+/* Fixed width: the header must not move when the language changes. */
+.auth-btn{width:86px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 6px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;min-height:34px}
 .sheet .body .muted{margin:0 0 10px}
 .sheet .body p{overflow-wrap:anywhere}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px}
-.lang button{border:0;background:none;padding:5px 11px;border-radius:999px;font-size:13px;color:var(--ink-2);cursor:pointer}
+.lang button{border:0;background:none;padding:6px 10px;min-height:32px;border-radius:999px;font-size:13px;color:var(--ink-2);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--navy);color:#fff}
 
 .warn{margin:12px 0 0;padding:10px 14px;border-radius:10px;background:#FEF3F2;color:var(--danger);font-size:14px}
@@ -138,3 +142,51 @@ dialog::backdrop{background:rgba(23,44,105,.45)}
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:99px;font-size:14px;font-weight:700;z-index:10;white-space:nowrap}
 
 @media (prefers-reduced-motion:reduce){.bell-byte.ring,.logo.tap{animation:none}}
+
+
+/* ---------- Responsive ---------- */
+.week-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.week{min-width:300px}
+
+/* Small phones (iPhone SE and similar) */
+@media (max-width:389px){
+  .app{padding:12px 12px calc(104px + env(safe-area-inset-bottom))}
+  .brand h1{font-size:19px}
+  .brand .logo{font-size:26px}
+  .brand .by{font-size:11px}
+  .auth-btn{width:68px;font-size:11.5px;padding:6px 4px}
+  .lang button{padding:6px 7px;font-size:12px}
+  .item .time{min-width:88px;font-size:13px}
+  .fab{padding:13px 18px;font-size:15px}
+}
+
+/* Landscape phones: shorter rows so the week still fits */
+@media (orientation:landscape) and (max-height:520px){
+  :root{--hour:32px}
+  .bell{padding:14px 16px 12px;border-radius:18px}
+  .bell-title{font-size:clamp(22px,5vw,30px)}
+}
+
+/* Tablets */
+@media (min-width:600px){
+  :root{--hour:52px}
+  .app{padding:20px 24px calc(120px + env(safe-area-inset-bottom))}
+  .auth-btn{width:104px;font-size:14px}
+  .dh{font-size:13px;padding:10px 4px}
+  .wb{font-size:12px}
+  :lang(my) .dh{font-size:11px}
+}
+
+/* Desktop: Now / Next beside the timetable */
+@media (min-width:900px){
+  .app{max-width:1120px}
+  .layout{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:28px;align-items:start}
+  .bell{margin:0;position:sticky;top:20px}
+  .fab{right:max(24px,calc(50% - 544px))}
+  .empty{grid-column:1 / -1}
+}
+
+/* Large desktop */
+@media (min-width:1280px){
+  :root{--hour:58px}
+}
