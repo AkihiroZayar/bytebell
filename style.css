@@ -20,11 +20,11 @@ button,input,select{font:inherit;color:inherit}
 /* Keep header metrics identical in every language (Burmese uses a taller line-height elsewhere). */
 .top,.top *,:lang(my) .top,:lang(my) .top *{line-height:1.25}
 .brand h1,:lang(my) .brand h1{line-height:1.1}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.01em;color:var(--navy);line-height:1.1}
-.brand .by{display:block;font-size:12px;color:var(--ink-2);font-weight:500}
-.logo{display:block;border:0;background:none;padding:0;line-height:0;cursor:pointer;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
-.logo img{display:block;width:34px;height:34px}
+.brand{display:flex;align-items:center;min-width:0}
+/* title replaced by wordmark */
+
+.logo{display:block;border:0;background:none;padding:0;line-height:0;cursor:pointer;border-radius:8px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.wordmark-img{display:block;height:28px;width:auto;max-width:160px}
 .logo.tap{animation:tap .25s ease-out}
 @keyframes tap{50%{transform:scale(1.18)}}
 .head-right{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
@@ -33,7 +33,7 @@ button,input,select{font:inherit;color:inherit}
 .sheet .body .muted{margin:0 0 10px}
 .sheet .body p{overflow-wrap:anywhere}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px}
-.lang button{border:0;background:none;padding:6px 10px;min-height:32px;border-radius:999px;font-size:13px;color:var(--ink-2);cursor:pointer}
+.lang button{border:0;background:none;padding:6px 8px;min-height:32px;white-space:nowrap;border-radius:999px;font-size:13px;color:var(--ink-2);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--navy);color:#fff}
 
 .warn{margin:12px 0 0;padding:10px 14px;border-radius:10px;background:#FEF3F2;color:var(--danger);font-size:14px}
@@ -72,7 +72,7 @@ button,input,select{font:inherit;color:inherit}
 .list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2px 14px;width:100%;text-align:left;cursor:pointer;background:#fff;border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:12px 14px}
 .item .time{font-size:14px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:96px}
-.item .nm{display:block;font-weight:700;overflow-wrap:anywhere}
+.item .nm{display:block;font-weight:700;overflow-wrap:anywhere;word-break:break-word;hyphens:auto}
 .item .pl{display:block;font-size:13px;color:var(--ink-2)}
 .item.past{opacity:.5}
 .item.now{background:var(--t);border-color:var(--c)}
@@ -114,7 +114,7 @@ button,input,select{font:inherit;color:inherit}
 footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
 footer strong{color:var(--navy)}
 .foot-brand{display:flex;align-items:center;gap:8px}
-.foot-mark{width:20px;height:20px;border-radius:5px}
+.foot-wordmark{height:22px;width:auto;opacity:.75}
 footer p{margin:2px 0}
 
 /* ---------- Sheet ---------- */
@@ -139,6 +139,10 @@ dialog::backdrop{background:rgba(23,44,105,.45)}
 .swatch span{display:block;width:32px;height:32px;border-radius:50%;background:var(--c);cursor:pointer}
 .swatch input:checked + span{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--c)}
 .swatch input:focus-visible + span{outline:3px solid var(--focus);outline-offset:5px}
+.toggle-group{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:2px}
+.tog{flex:1;border:0;background:#fff;padding:10px 6px;font-size:14px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:background .15s,color .15s;line-height:1.3}
+.tog.active{background:var(--navy);color:#fff}
+.badge.once{background:var(--navy-soft);color:var(--navy)}
 .err{min-height:1.2em;margin:0;color:var(--danger);font-size:14px;font-weight:700}
 .actions{display:flex;gap:8px;padding:12px 18px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
 .actions .primary{flex:1}
@@ -152,11 +156,12 @@ dialog::backdrop{background:rgba(23,44,105,.45)}
 .week-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .week{min-width:300px}
 
+@media (max-width:420px){ [data-view="done"]{font-size:12px;padding:10px 8px} }
 /* Small phones (iPhone SE and similar) */
 @media (max-width:389px){
   .app{padding:12px 12px calc(104px + env(safe-area-inset-bottom))}
   .brand h1{font-size:19px}
-  .logo img{width:30px;height:30px}
+  .wordmark-img{height:28px}
   .brand .by{font-size:11px}
   .empty .byte{width:82px;height:82px}
   .auth-btn{width:68px;font-size:11.5px;padding:6px 4px}
