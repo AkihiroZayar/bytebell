@@ -1,7 +1,7 @@
 // ByteBell by AkihiroLabs — rendering
 import { state } from "./storage.js";
 import { L, t } from "./i18n.js";
-import { occurrences, isoDay, pad, fmtTime, fmtMin, toMin, whenText } from "./time.js";
+import { occurrences, isoDay, pad, fmtTime, fmtMin, toMin, whenText, weekStart, weekEnd, thisWeekOnce } from "./time.js";
 
 export const $ = s => document.querySelector(s);
 export const esc = s => String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -79,6 +79,7 @@ function renderTabs() {
   return `<div class="tabs" role="tablist">
     <button class="tab" role="tab" type="button" data-view="today" aria-selected="${state.view === "today"}">${t("today")}</button>
     <button class="tab" role="tab" type="button" data-view="week" aria-selected="${state.view === "week"}">${t("week")}</button>
+    <button class="tab" role="tab" type="button" data-view="done" aria-selected="${state.view === "done"}">${t("doneSec")}</button>
   </div>`;
 }
 
@@ -103,7 +104,7 @@ function renderToday(now) {
     return `<li><button type="button" class="item ${status}" data-id="${esc(o.block.id)}" style="--c:${c.c};--t:${c.t}">
       <span class="time">${fmtTime(o.start)}–${fmtTime(o.end)}</span>
       <span><span class="nm">${esc(o.block.name)}</span>${o.block.place ? `<span class="pl">${esc(o.block.place)}</span>` : ""}</span>
-      ${status === "now" ? `<span class="badge">${t("now")}</span>` : "<span></span>"}
+      ${status === "now" ? `<span class="badge">${t("now")}</span>` : o.block.repeat === "once" ? `<span class="badge once">${t("thisWeekBadge")}</span>` : "<span></span>"}
     </button></li>`;
   }).join("");
   return strip + `<ul class="list">${items}</ul>`;
@@ -170,7 +171,7 @@ function renderWeek(now) {
       const label = `${x.b.name}, ${L().days[i]} ${fmtMin(x.s)}–${fmtMin(x.e)}`;
       return `<button type="button" class="wb" data-id="${esc(x.b.id)}" aria-label="${esc(label)}"
         style="--c:${c.c};--t:${c.t};top:calc(${x.ds / 60 - minH} * var(--hour));height:calc(${(x.de - x.ds) / 60} * var(--hour) - 2px);left:calc(${x.lane * 100 / x.cols}% + 2px);width:calc(${100 / x.cols}% - 4px)">
-        ${esc(x.b.name)}<small>${fmtMin(x.s)}</small></button>`;
+        ${esc(x.b.name)}${x.b.repeat==="once"?` ·`:"" }<small>${fmtMin(x.s)}</small></button>`;
     }).join("");
     const line = (i === todayIdx && nowMin >= minH * 60 && nowMin <= maxH * 60)
       ? `<div class="now-line" style="top:calc(${nowMin / 60 - minH} * var(--hour))"></div>` : "";
@@ -189,11 +190,37 @@ function renderEmpty() {
   </div>`;
 }
 
+function renderDone(now) {
+  const once = thisWeekOnce(now);
+  if (!once.length) return `<p class="muted">${t("doneEmpty")}</p>`;
+  const items = once.map(b => {
+    const c = col(b.color);
+    const allEnded = b.days.every(d => {
+      const dayDate = new Date(weekStart(now)); dayDate.setDate(dayDate.getDate() + d - 1);
+      const endMin = toMin(b.end) <= toMin(b.start) ? toMin(b.end) + 1440 : toMin(b.end);
+      const end = new Date(dayDate); end.setHours(0, endMin, 0, 0);
+      return now >= end;
+    });
+    return `<li><button type="button" class="item past" data-id="${esc(b.id)}" style="--c:${c.c};--t:${c.t}">
+      <span class="time">${b.days.map(d => L().daysShort[d-1]).join(", ")} · ${b.start}–${b.end}</span>
+      <span><span class="nm">${esc(b.name)}</span>${b.place ? `<span class="pl">${esc(b.place)}</span>` : ""}</span>
+      <span class="badge once">${t("thisWeekBadge")}</span>
+    </button></li>`;
+  }).join("");
+  return `<ul class="list">${items}</ul>`;
+}
+
 export function render() {
   const now = new Date();
   renderChrome();
   renderBell(now);
   const views = $("#views");
-  if (!state.blocks.length) { views.innerHTML = renderEmpty(); return; }
-  views.innerHTML = renderTabs() + (state.view === "week" ? renderWeek(now) : renderToday(now));
+  const weekly = state.blocks.filter(b => !b.repeat || b.repeat === "weekly");
+  const hasAny = state.blocks.length > 0;
+  if (!hasAny) { views.innerHTML = renderEmpty(); return; }
+  if (state.view === "done") {
+    views.innerHTML = renderTabs() + renderDone(now);
+  } else {
+    views.innerHTML = renderTabs() + (state.view === "week" ? renderWeek(now) : renderToday(now));
+  }
 }
