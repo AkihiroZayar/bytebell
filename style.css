@@ -23,6 +23,10 @@ button,input,select{font:inherit;color:inherit}
 .logo{border:0;background:none;padding:0;font-size:30px;line-height:1;cursor:pointer;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .logo.tap{animation:tap .25s ease-out}
 @keyframes tap{50%{transform:scale(1.18)}}
+.head-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.auth-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet .body .muted{margin:0 0 10px}
+.sheet .body p{overflow-wrap:anywhere}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px}
 .lang button{border:0;background:none;padding:5px 11px;border-radius:999px;font-size:13px;color:var(--ink-2);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--navy);color:#fff}
