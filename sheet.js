@@ -3,6 +3,7 @@ import { state, save } from "./storage.js";
 import { L, t } from "./i18n.js";
 import { $, esc, COLORS, ALERTS, toast } from "./render.js";
 import { pushBlock, deleteBlock } from "./cloud.js";
+import { weekStart } from "./time.js";
 
 let sheet, form, onChange, editingId = null;
 
@@ -15,7 +16,7 @@ const uid = () => crypto.randomUUID
 export function openSheet(id) {
   editingId = id || null;
   const b = id ? state.blocks.find(x => x.id === id) : null;
-  const d = b || { name: "", place: "", days: [], start: "09:00", end: "17:00", color: "navy", alert: 15 };
+  const d = b || { name: "", place: "", days: [], start: "09:00", end: "17:00", color: "navy", alert: 15, repeat: "weekly" };
 
   const dayChips = L().daysShort.map((label, i) =>
     `<button type="button" class="chip day" data-day="${i + 1}" aria-pressed="${d.days.includes(i + 1)}" aria-label="${esc(L().days[i])}">${label}</button>`).join("");
@@ -34,6 +35,13 @@ export function openSheet(id) {
         <input class="input" id="f-name" maxlength="40" autocomplete="off" placeholder="${esc(t("namePh"))}" value="${esc(d.name)}"></div>
       <div class="field"><label for="f-place">${t("place")}</label>
         <input class="input" id="f-place" maxlength="40" autocomplete="off" placeholder="${esc(t("placePh"))}" value="${esc(d.place || "")}"></div>
+      <div class="field">
+        <span class="lbl">${t("repeatMode")}</span>
+        <div class="toggle-group" role="group">
+          <button type="button" class="tog ${(d.repeat||'weekly')==='weekly'?'active':''}" data-tog="weekly">${t("everyWeek")}</button>
+          <button type="button" class="tog ${(d.repeat||'weekly')==='once'?'active':''}" data-tog="once">${t("thisWeekOnly")}</button>
+        </div>
+      </div>
       <div class="field"><span class="lbl" id="daysLbl">${t("repeats")}</span>
         <div class="chips" role="group" aria-labelledby="daysLbl">${dayChips}
           <button type="button" class="chip quick" data-quick="weekdays">${t("weekdays")}</button>
@@ -69,6 +77,12 @@ function updateOvernight() {
 }
 
 function onClick(e) {
+  const tog = e.target.closest("[data-tog]");
+  if (tog) {
+    form.querySelectorAll(".tog").forEach(b => b.classList.remove("active"));
+    tog.classList.add("active");
+    return;
+  }
   const day = e.target.closest(".day");
   if (day) { day.setAttribute("aria-pressed", String(day.getAttribute("aria-pressed") !== "true")); return; }
 
@@ -99,6 +113,7 @@ function onSubmit(e) {
   const place = $("#f-place").value.trim();
   const days = [...form.querySelectorAll('.day[aria-pressed="true"]')].map(b => +b.dataset.day).sort((a, b) => a - b);
   const start = $("#f-start").value, end = $("#f-end").value;
+  const repeat = (form.querySelector(".tog.active") || {}).dataset?.tog || "weekly";
   const color = (form.querySelector('input[name="color"]:checked') || {}).value || "navy";
   const av = $("#f-alert").value;
   const alert = av === "" ? null : Number(av);
@@ -107,12 +122,15 @@ function onSubmit(e) {
   if (err) { $("#f-err").textContent = err; return; }
 
   const ts = new Date().toISOString();
+  const weekOf = repeat === "once"
+    ? (() => { const ws = weekStart(new Date()); return `${ws.getFullYear()}-${String(ws.getMonth()+1).padStart(2,"0")}-${String(ws.getDate()).padStart(2,"0")}`; })()
+    : null;
   let block;
   if (editingId) {
     block = state.blocks.find(x => x.id === editingId);
-    if (block) Object.assign(block, { name, place, days, start, end, color, alert, updatedAt: ts });
+    if (block) Object.assign(block, { name, place, days, start, end, color, alert, repeat, weekOf, updatedAt: ts });
   } else {
-    block = { id: uid(), name, place, days, start, end, color, alert, createdAt: ts, updatedAt: ts };
+    block = { id: uid(), name, place, days, start, end, color, alert, repeat, weekOf, createdAt: ts, updatedAt: ts };
     state.blocks.push(block);
   }
   save(); sheet.close(); onChange(); toast(t("saved"));
