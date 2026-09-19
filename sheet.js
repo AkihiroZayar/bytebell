@@ -156,11 +156,11 @@ function onSubmit(e) {
   const av = $("#f-alert").value;
   const alert = av === "" ? null : Number(av);
 
-  const err = !name ? t("errName") : !days.length ? t("errDays") : (!start || !end || start === end) ? t("errSame") : "";
+  const daysErr = repeat === "dates" ? !dates.length : !days.length;
+  const err = !name ? t("errName") : daysErr ? t("errDays") : (!start || !end || start === end) ? t("errSame") : "";
   if (err) { $("#f-err").textContent = err; return; }
 
   const ts = new Date().toISOString();
-  if (repeat === "dates" && (!dates || !dates.length)) { $("#f-err").textContent = t("errDays"); return; }
   const weekOf = repeat === "once"
     ? (() => { const ws = weekStart(new Date()); return `${ws.getFullYear()}-${String(ws.getMonth()+1).padStart(2,"0")}-${String(ws.getDate()).padStart(2,"0")}`; })()
     : null;
