@@ -20,9 +20,13 @@ export function weekEnd(date) {
   return we;
 }
 
+// yyyy-mm-dd key matching the date-picker's format (see calendar.js's dateKey).
+const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
 // Real dated occurrences of every block, from `back` days ago to `fwd` days ahead.
 // Overnight blocks (end <= start) finish on the next day.
 // "once" blocks are only generated within their saved week (weekOf ISO string Mon).
+// "dates" blocks are only generated on their specifically picked dates.
 export function occurrences(now, back, fwd) {
   const out = [];
   const base = new Date(now); base.setHours(0, 0, 0, 0);
@@ -31,13 +35,17 @@ export function occurrences(now, back, fwd) {
     const day = new Date(base); day.setDate(base.getDate() + off);
     const dow = isoDay(day);
     for (const b of state.blocks) {
-      if (!b.days.includes(dow)) continue;
-      // "once" blocks only appear in the week they were created (weekOf = Mon ISO date)
-      if (b.repeat === "once") {
-        if (!b.weekOf) continue;
-        const bws = new Date(b.weekOf); bws.setHours(0,0,0,0);
-        const bwe = new Date(bws); bwe.setDate(bws.getDate() + 7);
-        if (day < bws || day >= bwe) continue;
+      if (b.repeat === "dates") {
+        if (!Array.isArray(b.dates) || !b.dates.includes(dateKey(day))) continue;
+      } else {
+        if (!b.days.includes(dow)) continue;
+        // "once" blocks only appear in the week they were created (weekOf = Mon ISO date)
+        if (b.repeat === "once") {
+          if (!b.weekOf) continue;
+          const bws = new Date(b.weekOf); bws.setHours(0,0,0,0);
+          const bwe = new Date(bws); bwe.setDate(bws.getDate() + 7);
+          if (day < bws || day >= bwe) continue;
+        }
       }
       const s = toMin(b.start), e = toMin(b.end);
       const start = new Date(day); start.setHours(0, s, 0, 0);

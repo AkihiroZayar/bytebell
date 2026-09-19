@@ -114,16 +114,26 @@ function renderToday(now) {
 function renderWeek(now) {
   // Split blocks into per-day segments (overnight blocks continue on the next day).
   const segs = [[], [], [], [], [], [], []];
+  const addSeg = (i, b, s, e) => {
+    if (e > s) segs[i].push({ b, s, e });
+    else {
+      segs[i].push({ b, s, e: 1440 });
+      if (e > 0) segs[(i + 1) % 7].push({ b, s: 0, e, cont: true });
+    }
+  };
+  const ws = weekStart(now);
   for (const b of state.blocks) {
     const s = toMin(b.start), e = toMin(b.end);
-    for (const d of b.days) {
-      const i = d - 1;
-      if (e > s) segs[i].push({ b, s, e });
-      else {
-        segs[i].push({ b, s, e: 1440 });
-        if (e > 0) segs[(i + 1) % 7].push({ b, s: 0, e, cont: true });
+    if (b.repeat === "dates") {
+      if (!Array.isArray(b.dates)) continue;
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(ws); day.setDate(ws.getDate() + i);
+        const dk = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+        if (b.dates.includes(dk)) addSeg(i, b, s, e);
       }
+      continue;
     }
+    for (const d of b.days) addSeg(d - 1, b, s, e);
   }
   // Grid range comes from real start times, so a 00:00–00:30 carry-over doesn't stretch the grid to midnight.
   const main = segs.flat().filter(x => !x.cont);
