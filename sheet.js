@@ -14,6 +14,24 @@ const uid = () => crypto.randomUUID
   : "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
 
+const MAX_PRESETS = 4;
+
+// "Quick add" row: up to MAX_PRESETS saved name+place shortcuts, so repeat entries
+// (School, Work, Gym…) don't need retyping. Re-rendered in place on add/remove so
+// it never touches the rest of the open form.
+function renderPresets() {
+  const presets = state.presets || [];
+  const chips = presets.map(p => `
+    <span class="chip preset" style="display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px">
+      <button type="button" data-preset="${esc(p.id)}" style="border:0;background:none;padding:0;font:inherit;cursor:pointer">${esc(p.name)}</button>
+      <button type="button" data-preset-del="${esc(p.id)}" aria-label="${esc(t("presetDel"))}" style="border:0;background:none;padding:0 2px;font:inherit;line-height:1;cursor:pointer;color:var(--ink-2)">×</button>
+    </span>`).join("");
+  const addChip = presets.length < MAX_PRESETS
+    ? `<button type="button" class="chip quick" data-action="save-preset">${t("savePreset")}</button>` : "";
+  return `<span class="lbl">${t("quickAdd")}</span>
+    <div class="chips" role="group">${chips}${addChip}</div>`;
+}
+
 export function openSheet(id) {
   editingId = id || null;
   const b = id ? state.blocks.find(x => x.id === id) : null;
@@ -36,6 +54,7 @@ export function openSheet(id) {
         <input class="input" id="f-name" maxlength="40" autocomplete="off" placeholder="${esc(t("namePh"))}" value="${esc(d.name)}"></div>
       <div class="field"><label for="f-place">${t("place")}</label>
         <input class="input" id="f-place" maxlength="40" autocomplete="off" placeholder="${esc(t("placePh"))}" value="${esc(d.place || "")}"></div>
+      ${!b ? `<div class="field" id="presetsField">${renderPresets()}</div>` : ""}
       <div class="field">
         <span class="lbl">${t("weeklyPattern")} / ${t("pickDates")}</span>
         <div class="toggle-group" role="group">
@@ -110,6 +129,21 @@ function onClick(e) {
     pd.classList.toggle("cal-sel");
     return;
   }
+  // quick-add preset: tap to fill, × to remove
+  const presetFill = e.target.closest("[data-preset]");
+  if (presetFill) {
+    const p = (state.presets || []).find(x => x.id === presetFill.dataset.preset);
+    if (p) { $("#f-name").value = p.name; $("#f-place").value = p.place || ""; $("#f-name").focus(); }
+    return;
+  }
+  const presetDel = e.target.closest("[data-preset-del]");
+  if (presetDel) {
+    state.presets = (state.presets || []).filter(x => x.id !== presetDel.dataset.presetDel);
+    save();
+    const field = $("#presetsField");
+    if (field) field.innerHTML = renderPresets();
+    return;
+  }
   const tog = e.target.closest("[data-tog]");
   if (tog) {
     form.querySelectorAll(".tog:not(.mode-tog)").forEach(b => b.classList.remove("active"));
@@ -129,6 +163,18 @@ function onClick(e) {
   const act = e.target.closest("[data-action]");
   if (!act) return;
   if (act.dataset.action === "cancel") sheet.close();
+  if (act.dataset.action === "save-preset") {
+    const name = $("#f-name").value.trim();
+    if (!name) { $("#f-err").textContent = t("errName"); return; }
+    if (!state.presets) state.presets = [];
+    if (state.presets.length >= MAX_PRESETS) return;
+    state.presets.push({ id: uid(), name, place: $("#f-place").value.trim() });
+    save();
+    const field = $("#presetsField");
+    if (field) field.innerHTML = renderPresets();
+    toast(t("presetSaved"));
+    return;
+  }
   if (act.dataset.action === "delete") {
     const b = state.blocks.find(x => x.id === editingId);
     if (b && confirm(t("confirmDel", { name: b.name }))) {

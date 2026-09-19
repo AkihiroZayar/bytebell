@@ -9,15 +9,23 @@ export const state = {
   lang: "en",
   view: "today",
   blocks: [],
+  presets: [],         // saved name+place quick-fill shortcuts (max 4), for the New block sheet
   demo: false,        // true while demo mode is on
   savedBlocks: null,  // the user's real blocks, kept aside during demo
   storageOK: true
 };
 
+const MAX_PRESETS = 4;
+
 function validBlock(b) {
   return b && typeof b.id === "string" && typeof b.name === "string" && Array.isArray(b.days)
     && b.days.every(d => Number.isInteger(d) && d >= 1 && d <= 7)
     && TIME_RE.test(b.start) && TIME_RE.test(b.end);
+}
+
+function validPreset(p) {
+  return p && typeof p.id === "string" && typeof p.name === "string" && p.name.trim()
+    && (p.place === undefined || typeof p.place === "string");
 }
 
 export function load() {
@@ -26,6 +34,7 @@ export function load() {
     if (raw) {
       const d = JSON.parse(raw);
       if (Array.isArray(d.blocks)) state.blocks = d.blocks.filter(validBlock);
+      if (Array.isArray(d.presets)) state.presets = d.presets.filter(validPreset).slice(0, MAX_PRESETS);
       if (LANGS.includes(d.lang)) state.lang = d.lang;
       if (d.view === "week") state.view = "week";
     } else {
@@ -51,7 +60,7 @@ export function save() {
   // Demo blocks are never written — only the user's real schedule is saved.
   const blocks = state.demo ? (state.savedBlocks || []) : state.blocks;
   try {
-    localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, lang: state.lang, view: state.view, blocks }));
+    localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, lang: state.lang, view: state.view, blocks, presets: state.presets }));
     state.storageOK = true;
   } catch (e) {
     state.storageOK = false;

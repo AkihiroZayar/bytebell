@@ -227,7 +227,9 @@ export function render() {
   renderBell(now);
   const views = $("#views");
   if (!state.blocks.length && state.view !== "cal" && state.view !== "today") {
-    views.innerHTML = renderEmpty(); return;
+    // Keep the tab bar even on the empty-state screen — dropping it here stranded
+    // the person on Week/Done with no blocks and no way back to Calendar.
+    views.innerHTML = renderTabs() + renderEmpty(); return;
   }
   if (state.view === "done") {
     views.innerHTML = renderTabs() + renderDone(now);
