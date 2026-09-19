@@ -1,0 +1,15 @@
+{
+  "name": "ByteBell by AkihiroLabs",
+  "short_name": "ByteBell",
+  "description": "Your weekly timetable with smart reminders",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1E3A8A",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "favicon.png",        "sizes": "64x64",   "type": "image/png" },
+    { "src": "apple-touch-icon.png","sizes": "180x180", "type": "image/png" },
+    { "src": "icon.png",           "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
