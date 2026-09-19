@@ -243,3 +243,11 @@ dialog::backdrop{background:rgba(23,44,105,.45)}
   .cal-wrap{width:300px;margin-right:32px}
   .day-detail{width:calc(100% - 340px)}
 }
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;min-height:50px}
+
+.head-right{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;min-width:0;flex-shrink:0}
+
+.auth-btn{width:86px;flex-shrink:0;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 6px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;min-height:34px}
+
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
