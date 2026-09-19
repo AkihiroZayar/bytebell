@@ -137,6 +137,12 @@ export const I18N = {
     dur: (h, m) => h ? (m ? `${h} နာရီ ${m} မိနစ်` : `${h} နာရီ`) : `${m} မိနစ်`
   }
 };
-
+// EN
+footNote: "🦝 Made by AkihiroLabs — check out our other free apps on Discord.",
+// JA
+footNote: "🦝 AkihiroLabs制作 — 他の無料アプリはDiscordでチェック！",
+// MY
+footNote: "🦝 AkihiroLabs မှ ပြုလုပ်သည် — အခြားအက်ပ်များကို Discord တွင် ကြည့်ပါ။",
+  
 export const L = () => I18N[state.lang];
 export const t = (key, vars = {}) => String(L()[key]).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
