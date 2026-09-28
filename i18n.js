@@ -20,7 +20,7 @@ export const I18N = {
     emptyBody: "Add the things that repeat every week, like school or work. Byte shows what's on now and what's next.",
     todayEmpty: "Nothing scheduled today.",
     storageWarn: "This browser isn't saving data. Changes will be lost when you close the page.",
-    footNote: "Saved on this device. Phone notifications arrive in the next update.",
+    footNote: "🦝 Made by AkihiroLabs — check out our other free apps on Discord.",
     repeatMode: "Schedule type", everyWeek: "Every week", thisWeekOnly: "This week only",
     thisWeekBadge: "This week", doneSec: "Done (this week)", doneEmpty: "No one-time blocks this week.",
     expiredNote: "This one-time block has ended.",
@@ -65,7 +65,7 @@ export const I18N = {
     emptyBody: "学校やバイトなど、毎週くり返す予定を追加しましょう。Byteが「いま」と「次」を教えてくれます。",
     todayEmpty: "今日は予定がありません。",
     storageWarn: "このブラウザでは保存できません。ページを閉じると変更が消えます。",
-    footNote: "この端末に保存されます。スマホ通知は次のアップデートで対応します。",
+    footNote: "🦝 AkihiroLabs制作 — 他の無料アプリはDiscordでチェック！",
     repeatMode: "スケジュール種別", everyWeek: "毎週くり返す", thisWeekOnly: "今週のみ",
     thisWeekBadge: "今週のみ", doneSec: "完了（今週）", doneEmpty: "今週の1回限りの予定はありません。",
     expiredNote: "この1回限りの予定は終了しました。",
@@ -110,7 +110,7 @@ export const I18N = {
     emptyBody: "ကျောင်း၊ အလုပ် စသည့် အပတ်တိုင်း ထပ်ခါလုပ်သော အစီအစဉ်များကို ထည့်ပါ။ ယခုနှင့် နောက်တစ်ခုကို Byte က ပြပေးပါမည်။",
     todayEmpty: "ယနေ့ အစီအစဉ် မရှိပါ။",
     storageWarn: "ဤဘရောက်ဇာတွင် သိမ်းဆည်း၍ မရပါ။ စာမျက်နှာပိတ်လျှင် ပြောင်းလဲမှုများ ပျောက်ပါမည်။",
-    footNote: "ဤစက်တွင် သိမ်းဆည်းထားပါသည်။ ဖုန်းအသိပေးချက်များကို နောက်အပ်ဒိတ်တွင် ထည့်ပါမည်။",
+    footNote: "🦝 AkihiroLabs မှ ပြုလုပ်သည် — အခြားအက်ပ်များကို Discord တွင် ကြည့်ပါ။",
     repeatMode: "အချိန်ဇယားအမျိုးအစား", everyWeek: "အပတ်တိုင်း", thisWeekOnly: "ဒီအပတ်သာ",
     thisWeekBadge: "ဒီအပတ်", doneSec: "ပြီးဆုံးပြီ (ဒီအပတ်)", doneEmpty: "ဒီအပတ် တစ်ကြိမ်သာ အစီအစဉ် မရှိပါ။",
     expiredNote: "ဤတစ်ကြိမ်တည်း အစီအစဉ် ပြီးဆုံးသွားပြီ။",
@@ -137,12 +137,6 @@ export const I18N = {
     dur: (h, m) => h ? (m ? `${h} နာရီ ${m} မိနစ်` : `${h} နာရီ`) : `${m} မိနစ်`
   }
 };
-// EN
-footNote: "🦝 Made by AkihiroLabs — check out our other free apps on Discord.",
-// JA
-footNote: "🦝 AkihiroLabs制作 — 他の無料アプリはDiscordでチェック！",
-// MY
-footNote: "🦝 AkihiroLabs မှ ပြုလုပ်သည် — အခြားအက်ပ်များကို Discord တွင် ကြည့်ပါ။",
-  
+
 export const L = () => I18N[state.lang];
 export const t = (key, vars = {}) => String(L()[key]).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
