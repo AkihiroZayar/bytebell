@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="app-icon.png" alt="ByteBell logo" width="112">
+</p>
+
 <h1 align="center">ByteBell</h1>
 
 <p align="center">
@@ -5,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-1E3A8A" alt="version 1.0.0">
+  <img src="https://img.shields.io/badge/version-1.1.0-1E3A8A" alt="version 1.1.0">
   <img src="https://img.shields.io/badge/PWA-installable-00A8CC" alt="PWA">
   <img src="https://img.shields.io/badge/vanilla-JavaScript-1E3A8A" alt="Vanilla JS">
   <img src="https://img.shields.io/badge/lang-EN%20%7C%20JA%20%7C%20MY-00A8CC" alt="EN | JA | MY">
@@ -62,7 +66,9 @@ bytebell/
 ├── sw.js               # Service worker (offline + push)
 ├── manifest.json       # PWA manifest
 ├── schema.sql          # Supabase tables + row-level security
-├── *.png               # AkihiroLabs icons, logo, wordmark
+├── app-icon.png        # App logo (README, 512px)
+├── favicon.png · apple-touch-icon.png · icon-192.png · icon-512.png
+├── icon.png · logo.png · wordmark*.png  # Byte 🦝 + AkihiroLabs brand art
 ├── CHANGELOG.md
 └── README.md
 ```
@@ -82,7 +88,7 @@ This project uses [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH
 - The version is tracked in [`CHANGELOG.md`](CHANGELOG.md) and GitHub Releases. When you change cached files, also bump `CACHE` in `sw.js` (e.g. `bytebell-v2`) so installed apps update.
 - To release: bump the version, add an entry to [`CHANGELOG.md`](CHANGELOG.md), then create a GitHub Release tagged `vX.Y.Z`.
 
-Current version: **v1.0.0** — see the [changelog](CHANGELOG.md).
+Current version: **v1.1.0** — see the [changelog](CHANGELOG.md).
 
 ## 💬 Community
 

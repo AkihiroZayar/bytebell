@@ -1,11 +1,11 @@
 // ByteBell by AkihiroLabs — Service Worker v1
-const CACHE = "bytebell-v1";
+const CACHE = "bytebell-v2";
 const SHELL = [
   "./", "./index.html", "./style.css",
   "./app.js","./auth.js","./cloud.js","./config.js","./demo.js",
   "./i18n.js","./render.js","./sheet.js","./storage.js","./time.js",
   "./calendar.js","./push.js",
-  "./icon.png","./logo.png","./wordmark.png","./favicon.png","./apple-touch-icon.png","./manifest.json"
+  "./icon.png","./logo.png","./wordmark.png","./favicon.png","./apple-touch-icon.png","./icon-192.png","./icon-512.png","./manifest.json"
 ];
 
 // Install: cache all shell files
