@@ -36,7 +36,7 @@ ByteBell uses JavaScript modules and a service worker, so it must be served over
 2. Serve the folder, e.g. with VS Code **Live Server**, or `npx serve .`
 3. Open it in your browser — or just use the live version below.
 
-Live: **https://akihirozayar.github.io/bytebell/**
+Live: **https://bell.akihirolabs.com/**
 
 ### Optional: cloud sync & push
 
