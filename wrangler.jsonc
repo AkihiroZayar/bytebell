@@ -1,0 +1,8 @@
+// AkihiroLabs — Cloudflare Workers static site config (deploys on every push to main)
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bytebell",
+  "compatibility_date": "2026-10-19",
+  "observability": { "enabled": true },
+  "assets": { "directory": "." }
+}
